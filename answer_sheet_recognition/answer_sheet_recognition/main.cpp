@@ -1,8 +1,8 @@
-//¹¦ÄÜ£º Í¸ÊÓ±ä»»Íê³ÉÍ¼Ïñ»û±ä½ÃÕı
-//È±µã£º ÓÉÓÚ´ğÌâ¿¨ĞÎ×´ÎÊÌâ£¬ÎŞ·¨Íê³É½Çµã×Ô¶¯Ñ¡È¡£¬¹Ê²ÉÓÃÊó±êÈË¹¤Ñ¡Ôñ
-//×÷Õß£º liangzelang£¨liangzelang@gmail.com£©
-//Ê±¼ä£º 2017/05/18
-//°æ±¾£º 0.01
+//åŠŸèƒ½ï¼š é€è§†å˜æ¢å®Œæˆå›¾åƒç•¸å˜çŸ«æ­£
+//ç¼ºç‚¹ï¼š ç”±äºç­”é¢˜å¡å½¢çŠ¶é—®é¢˜ï¼Œæ— æ³•å®Œæˆè§’ç‚¹è‡ªåŠ¨é€‰å–ï¼Œæ•…é‡‡ç”¨é¼ æ ‡äººå·¥é€‰æ‹©
+//ä½œè€…ï¼š liangzelangï¼ˆliangzelang@gmail.comï¼‰
+//æ—¶é—´ï¼š 2017/05/18
+//ç‰ˆæœ¬ï¼š 0.01
 
 #include <opencv2\opencv.hpp>
 #include <iostream>
@@ -46,7 +46,7 @@ int main()
 
 int findVerMax(const vector<int> & inputArray, vector<int> & upIndex, vector<int> & downIndex)
 {
-	int length = inputArray.size();  //0 ºÚÉ«  255°×É«
+	int length = inputArray.size();  //0 é»‘è‰²  255ç™½è‰²
 	int maxValue = inputArray[0];
 	int m = 0,n= 0;
 	int maxIndex = 0;
@@ -76,7 +76,7 @@ void findVerticalMax(const vector<int> & inputArray, vector<int> & maxIndex)
 	int length = inputArray.size();
 	int maxVal = 0;
 	int maxInd = 0;
-	//ÕÒµ½×î´óµÄindex
+	//æ‰¾åˆ°æœ€å¤§çš„index
 	for(int i = 0; i < length; i++)
 	{
 		if(maxVal < inputArray[i])
@@ -85,7 +85,7 @@ void findVerticalMax(const vector<int> & inputArray, vector<int> & maxIndex)
 			maxInd = i;
 		}
 	}
-	//Ñ°ÕÒ¶¨Î»±ê×ó±ß½ç
+	//å¯»æ‰¾å®šä½æ ‡å·¦è¾¹ç•Œ
 	for(int i = maxInd; i > 0; i--)
 	{
 		if(inputArray[i] == 0 && inputArray[i+1] > 0)
@@ -95,7 +95,7 @@ void findVerticalMax(const vector<int> & inputArray, vector<int> & maxIndex)
 		}
 			
 	}
-	//Ñ°ÕÒ¶¨Î»±êÓÒ±ß½ç
+	//å¯»æ‰¾å®šä½æ ‡å³è¾¹ç•Œ
 	for(int i = maxInd; i < length; i++)
 	{
 		if(inputArray[i] == 0 && inputArray[i-1] > 0)
@@ -140,43 +140,43 @@ void findMax(const vector<int> & inputArray, vector<int> & maxIndex)
 	maxIndex[3] = n;
 }
 
-//µÚÒ»ÖÖ·½·¨£¬Ê¹ÓÃĞÎÌ¬Ñ§ÂË²¨µÄ·½Ê½¶ÔÍ¼ÏñÔ¤´¦Àí
+//ç¬¬ä¸€ç§æ–¹æ³•ï¼Œä½¿ç”¨å½¢æ€å­¦æ»¤æ³¢çš„æ–¹å¼å¯¹å›¾åƒé¢„å¤„ç†
 void process_Pic1()
 {
 
-// Í¼ÏñÔ¤´¦Àí
-// µÃµ½¶şÖµ»¯Í¼Ïñ£¬»ù±¾ÄÜ¹»·ÖÀë³öÍ¿¿¨Î»ÖÃ£¬ÎªºóÃæ´¦ÀíÌá¹©Ô´
-// Õâ¸ö½×¶ÎÖØÄÑµã£º 1¡¢Í¸ÊÓ±ä»»µÄ×¼È·ĞÔ   2¡¢¶şÖµ»¯ãĞÖµµÄÑ¡È¡ºÏÀíĞÔ 3¡¢ĞÎÌ¬Ñ§ÂË²¨
-	Mat rsrcImage = imread("D:\\C++³ÌĞòÁªÏµÎÄ¼ş¼Ğ£¨¿ÉÑ¡ÔñĞÔÉ¾³ı£©\\Answer-Card-Recognition\\pic\\result1.jpg",1);
+// å›¾åƒé¢„å¤„ç†
+// å¾—åˆ°äºŒå€¼åŒ–å›¾åƒï¼ŒåŸºæœ¬èƒ½å¤Ÿåˆ†ç¦»å‡ºæ¶‚å¡ä½ç½®ï¼Œä¸ºåé¢å¤„ç†æä¾›æº
+// è¿™ä¸ªé˜¶æ®µé‡éš¾ç‚¹ï¼š 1ã€é€è§†å˜æ¢çš„å‡†ç¡®æ€§   2ã€äºŒå€¼åŒ–é˜ˆå€¼çš„é€‰å–åˆç†æ€§ 3ã€å½¢æ€å­¦æ»¤æ³¢
+	Mat rsrcImage = imread("D:\\C++ç¨‹åºè”ç³»æ–‡ä»¶å¤¹ï¼ˆå¯é€‰æ‹©æ€§åˆ é™¤ï¼‰\\Answer-Card-Recognition\\pic\\result1.jpg",1);
 	Mat rGrayImage;
 	Mat rBinImage;
-	cvtColor(rsrcImage,rGrayImage, CV_BGR2GRAY);  //»Ò¶È»¯
-	//CV_THRESH_OTSU²ÎÊı×Ô¶¯Éú³ÉãĞÖµ£¬¸úµÚÈı¸ö²ÎÊıÒ²¾ÍÃ»ÓĞ¹ØÏµÁË¡£ 
-    threshold(rGrayImage, rBinImage, 0, 255,  CV_THRESH_BINARY | CV_THRESH_OTSU); //¶şÖµ»¯
+	cvtColor(rsrcImage,rGrayImage, CV_BGR2GRAY);  //ç°åº¦åŒ–
+	//CV_THRESH_OTSUå‚æ•°è‡ªåŠ¨ç”Ÿæˆé˜ˆå€¼ï¼Œè·Ÿç¬¬ä¸‰ä¸ªå‚æ•°ä¹Ÿå°±æ²¡æœ‰å…³ç³»äº†ã€‚ 
+    threshold(rGrayImage, rBinImage, 0, 255,  CV_THRESH_BINARY | CV_THRESH_OTSU); //äºŒå€¼åŒ–
 	///imshow("binary image", rBinImage);
 	Mat erodeImage, dilateImage, edImage;
-	//¶¨ÒåºË  
+	//å®šä¹‰æ ¸  
 	Mat element = getStructuringElement(MORPH_RECT, Size(3, 3));   
-	//½øĞĞĞÎÌ¬Ñ§²Ù×÷ 	
+	//è¿›è¡Œå½¢æ€å­¦æ“ä½œ 	
 	morphologyEx(rBinImage, edImage, MORPH_CLOSE, element,Point(-1,-1),1);
-	imshow("ÏÈÅòÕÍºó¸¯Ê´--±ÕÔËËã", edImage);
+	imshow("å…ˆè†¨èƒ€åè…èš€--é—­è¿ç®—", edImage);
 
 	
-// Í¼Ïñ´¹Ö±Í¶Ó° µÃµ½¶¨Î»±êÎ»ÖÃ£¬²¢ÇĞ¸î
-// Í¼ÏñË®Æ½Í¶Ó°  µÃµ½´ğÌâ¿¨ÇøÓòÎ»ÖÃ£¬²¢ÇĞ¸î
-// ´Ë¶Î´¦ÀíµÄÍ¼ÏñÔ´£º edImage
-	Mat psrcImage(edImage);  //´¦ÀíÔ´Í¼Ïñ
+// å›¾åƒå‚ç›´æŠ•å½± å¾—åˆ°å®šä½æ ‡ä½ç½®ï¼Œå¹¶åˆ‡å‰²
+// å›¾åƒæ°´å¹³æŠ•å½±  å¾—åˆ°ç­”é¢˜å¡åŒºåŸŸä½ç½®ï¼Œå¹¶åˆ‡å‰²
+// æ­¤æ®µå¤„ç†çš„å›¾åƒæºï¼š edImage
+	Mat psrcImage(edImage);  //å¤„ç†æºå›¾åƒ
 	vector<int> horizon(psrcImage.rows);
 	vector<int> vertical(psrcImage.cols);
 	project_Pic(psrcImage,horizon, vertical);
 	
-	//²éÕÒ¶¨Î»±ê
+	//æŸ¥æ‰¾å®šä½æ ‡
 	vector<int> locIndex;
 	findVerticalMax(vertical, locIndex);
 	Mat locImage;
 	psrcImage(Rect(locIndex[0],0, locIndex[1] - locIndex[0] + 1, psrcImage.rows-1) ).copyTo(locImage);
 	imshow("LocateImage", locImage);
-	//Èç¹û²»ÒªÇóÂ³°ôĞÔ£¬¾ÍÖ±½ÓË®Æ½Í¶Ó°¶¨Î»±ê¾ÍOK
+	//å¦‚æœä¸è¦æ±‚é²æ£’æ€§ï¼Œå°±ç›´æ¥æ°´å¹³æŠ•å½±å®šä½æ ‡å°±OK
 	vector<int> locHorizon(locImage.rows);
 	vector<int> locVertical(locImage.cols);
 	project_Pic(locImage, locHorizon, locVertical);
@@ -294,16 +294,16 @@ void on_Change(int,void *)
 }
 
 
-//º¯Êı×÷ÓÃ£º ½«Í¼ÏñË®Æ½ºÍ´¹Ö±Í¶Ó°£¬µÃµ½ Ë®Æ½ºÍ´¹Ö±Í¶Ó°µÄÍ¼
-//·µ»Ø£º horizon_out Ë®Æ½Í¶Ó°µÄÍ¼
-//		 vertical_out ´¹Ö±Í¶Ó°µÄÍ¼
+//å‡½æ•°ä½œç”¨ï¼š å°†å›¾åƒæ°´å¹³å’Œå‚ç›´æŠ•å½±ï¼Œå¾—åˆ° æ°´å¹³å’Œå‚ç›´æŠ•å½±çš„å›¾
+//è¿”å›ï¼š horizon_out æ°´å¹³æŠ•å½±çš„å›¾
+//		 vertical_out å‚ç›´æŠ•å½±çš„å›¾
 void project_Pic(const Mat & src, vector<int> & horizon_out, vector<int> & vertical_out)
 {
-	// ¶Ôsrc½øĞĞ¶şÖµ»¯ÖµÍ³¼Æ
-	//horizontal Ë®Æ½
+	// å¯¹srcè¿›è¡ŒäºŒå€¼åŒ–å€¼ç»Ÿè®¡
+	//horizontal æ°´å¹³
 	
 	int pixelValue = 0;
-	for(int i = 0; i < src.rows; i++)   //ÓĞ¶àÉÙĞĞ
+	for(int i = 0; i < src.rows; i++)   //æœ‰å¤šå°‘è¡Œ
 	{
 		for(int j = 0; j < src.cols; j++)
 		{
@@ -314,7 +314,7 @@ void project_Pic(const Mat & src, vector<int> & horizon_out, vector<int> & verti
 		pixelValue = 0;
 	}
 
-	//vertical ´¹Ö±
+	//vertical å‚ç›´
 	//vector<int> vertical_out;
 	for(int i = 0; i < src.cols; i++)
 	{
@@ -333,7 +333,7 @@ void project_Pic(const Mat & src, vector<int> & horizon_out, vector<int> & verti
 	for(int i = 0; i < horImage.rows; i++)
 	{
 		for(int j = 0; j < horizon_out[i]; j++)
-			horImage.at<uchar>(i,j) = 0;  //¼ÙÉè³õÊ¼»¯Îª0£»
+			horImage.at<uchar>(i,j) = 0;  //å‡è®¾åˆå§‹åŒ–ä¸º0ï¼›
 	}
 	for(int i = 0; i < verImage.cols; i ++)
 	{
@@ -347,8 +347,8 @@ void project_Pic(const Mat & src, vector<int> & horizon_out, vector<int> & verti
 }
 
 
-//-----------------------------------¡¾onMouse( )º¯Êı¡¿---------------------------------------
-//		ÃèÊö£ºÊó±êÏûÏ¢»Øµ÷º¯Êı
+//-----------------------------------ã€onMouse( )å‡½æ•°ã€‘---------------------------------------
+//		æè¿°ï¼šé¼ æ ‡æ¶ˆæ¯å›è°ƒå‡½æ•°
 //-----------------------------------------------------------------------------------------------
 static void on_Mouse( int event, int x, int y, int flags, void* )
 {	
@@ -361,7 +361,7 @@ static void on_Mouse( int event, int x, int y, int flags, void* )
 	{
 		case CV_EVENT_LBUTTONUP :
 			srcpt[ptflag] = Point(x,y);
-			//srcpt.push_back(Point(x,y));  //±£´æÑ¡È¡µÄµã
+			//srcpt.push_back(Point(x,y));  //ä¿å­˜é€‰å–çš„ç‚¹
 			cout << "The chosen point is : " << srcpt[ptflag].x << " , " << srcpt[ptflag].y << endl;
 			ptflag++;
 			if(ptflag == 4)
@@ -373,17 +373,17 @@ static void on_Mouse( int event, int x, int y, int flags, void* )
 				dstpt[2] = Point2f(480,640);
 				dstpt[1] = Point2f(480,0);
 			
-				//ÇóÈ¡Ó³Éä¾ØÕó
-				perImage = Mat::zeros(640,480, CV_8UC3);   //ÕâÀïµÄzeros µÚÒ»¸ö²ÎÊıÊÇrows ĞĞ  µÚ¶şÊÇcols ÁĞ  ºÍwidth£¨£©º¯Êı¶¨ÒåÕıºÃÏà·´
+				//æ±‚å–æ˜ å°„çŸ©é˜µ
+				perImage = Mat::zeros(640,480, CV_8UC3);   //è¿™é‡Œçš„zeros ç¬¬ä¸€ä¸ªå‚æ•°æ˜¯rows è¡Œ  ç¬¬äºŒæ˜¯cols åˆ—  å’Œwidthï¼ˆï¼‰å‡½æ•°å®šä¹‰æ­£å¥½ç›¸å
 				Mat transMat = getPerspectiveTransform(srcpt, dstpt);
 				warpPerspective(pic, perImage, transMat, perImage.size());	
 				imshow("fuck", perImage);
 
-				imwrite("D:\\C++³ÌĞòÁªÏµÎÄ¼ş¼Ğ£¨¿ÉÑ¡ÔñĞÔÉ¾³ı£©\\Answer-Card-Recognition\\pic\\result.jpg",perImage);	
+				imwrite("D:\\C++ç¨‹åºè”ç³»æ–‡ä»¶å¤¹ï¼ˆå¯é€‰æ‹©æ€§åˆ é™¤ï¼‰\\Answer-Card-Recognition\\pic\\result.jpg",perImage);	
 
 				if(ptflag == 0)
 				{
-					psrcImage = imread("D:\\C++³ÌĞòÁªÏµÎÄ¼ş¼Ğ£¨¿ÉÑ¡ÔñĞÔÉ¾³ı£©\\Answer-Card-Recognition\\pic\\result1.jpg",1);
+					psrcImage = imread("D:\\C++ç¨‹åºè”ç³»æ–‡ä»¶å¤¹ï¼ˆå¯é€‰æ‹©æ€§åˆ é™¤ï¼‰\\Answer-Card-Recognition\\pic\\result1.jpg",1);
 					cvtColor(psrcImage, pmidImage, CV_RGB2GRAY);
 					namedWindow("process", 1);
 					createTrackbar("value", "process", &threshold_value, 255, on_Change);
