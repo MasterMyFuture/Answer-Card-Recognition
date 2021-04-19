@@ -91,6 +91,8 @@ void getImageShadow(const cv::Mat & src,std::vector<int> &horizon,std::vector<in
 	imshow("ver",verImage);
 	//imwrite("4.jpg",verImage);
 	//imwrite("3.jpg",horImage);
+	imwrite("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/verImage.jpg",verImage);
+	imwrite("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/horImage.jpg",horImage);
 
 	
 }
@@ -110,6 +112,7 @@ void getRegion(cv::Mat &edImage){
 	edImage(cv::Rect(locIndex[0],0, locIndex[1] - locIndex[0] + 1, edImage.rows-1) ).copyTo(locImage);
 	if(!locImage.empty()){
 		imshow("LocateImage", locImage);
+		
 
 	}
 	
@@ -142,3 +145,4 @@ void getRegion(cv::Mat &edImage){
 		
 	}
 }
+

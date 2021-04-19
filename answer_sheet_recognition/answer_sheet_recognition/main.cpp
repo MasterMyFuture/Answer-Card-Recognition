@@ -37,15 +37,23 @@ int main()
 {
 	Mat dstImage;
 	Mat midImage;
-	Mat srcImage = imread("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/1.jpg",1);
+	//pic = imread("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/1.jpg",1);
+	Mat srcImage = imread("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/Perspectived.jpg",1);
+	//Mat scale(640,480,CV_8UC1,Scalar(0));
+	std::vector<int> horizon(srcImage.rows);
+	std::vector<int> vertical(srcImage.cols);
 
 
 
 	preprocess(srcImage,dstImage);
 
 
-	//getImageShadow(dstImage,horizon,vertical);
-	getRegion(dstImage);
+	getImageShadow(dstImage,horizon,vertical);
+	namedWindow("input",WINDOW_NORMAL);
+	imshow("input",dstImage);
+	//setMouseCallback("input",on_Mouse,0);
+	//imshow("scale",scale);
+	//getRegion(dstImage);
 	//namedWindow("src", WINDOW_NORMAL);
 	//imshow("src",srcImage);
 	//process_Pic1(srcImage);
@@ -206,6 +214,12 @@ void process_Pic1(Mat rsrcImage)
 	vector<int> locUpIndex, locDownIndex;
 	findLocHorizon(locHorizon, locUpIndex, locDownIndex);
 // #ifdef 0
+	/**
+	 * 1.为什么要写这个？为什么要判断上条纹数等于下条纹数？
+	 * 
+	 * 2.为什么要画线？
+	 * 
+	*/
 	if(locUpIndex.size() == locDownIndex.size())
 	{
 		Mat tempq;
@@ -228,7 +242,10 @@ void process_Pic1(Mat rsrcImage)
 	//切割
 	/**
 	 * 1.为什么是11和17-11？
+	 * 	因为准考证刚好占11个黑色条，第一栏答案刚好是到第17条结束
 	 * 2. 为什么这里的宽度用原图宽度？
+	 * 3. NUMS有什么用？为什么是20？
+	 * 		因为第一栏有20道题
 	*/
 	picCut(psrcImage,answer, Rect(0,locDownIndex[11], psrcImage.cols-1, locUpIndex[17]-locDownIndex[11]));
 
@@ -251,7 +268,10 @@ void process_Pic1(Mat rsrcImage)
 	}
 
 }
-
+/**
+ * 1. 为什么要locUp和locDown两个向量？
+ * 		因为loc表示右边条纹
+*/
 void findAnswer(const vector<int> & input, const vector<int> locUp, const vector<int> locDown, string & ans)
 {
 	size_t length = input.size();
@@ -294,7 +314,19 @@ void picCut(const Mat & inputArray, Mat & outputArray, const Rect & rectRoi)
 {
 	outputArray = inputArray(rectRoi);
 }
-
+/**
+ * 1. 为什么要写这个函数？
+ * 		因为要找到上下边界，然后切割
+ * 2. 为什么不和垂直方向上的一样，从中间开始往两边走，找到边缘？
+ * 
+ * 3. 为什么Horizon用的是Down和Up，而不是Left和right？
+ * 		因为水平投影就是统计x轴，保留y轴
+ * 4. 为什么没有设置阈值，求出的vector那么长，而不是length=2？为什么“注意事项”这些字符没有影响条纹扫描？
+ * 		因为经过了形态学处理，把字符都干掉了
+ * 
+ * 5.为什么这里需要两个vector来保存结果？
+ * 		Up和Down表示每个条纹的上边界和下边界，vector的index表示条纹数
+*/
 void findLocHorizon(const vector<int> & inputArray, vector<int> & locUp, vector<int> & locDown)
 {
 	size_t length = inputArray.size();  //
@@ -374,9 +406,11 @@ void project_Pic(const Mat & src, vector<int> & horizon_out, vector<int> & verti
 }
 
 
-//-----------------------------------【onMouse( )函数】---------------------------------------
+/**-----------------------------------【onMouse( )函数】---------------------------------------
 //		描述：鼠标消息回调函数
 //-----------------------------------------------------------------------------------------------
+//  1. 为什么这里是640，480，包括准考证号吗？
+**/
 static void on_Mouse( int event, int x, int y, int flags, void* )
 {	
 	if( x < 0 || x >= pic.cols || y < 0 || y >= pic.rows )
@@ -391,32 +425,34 @@ static void on_Mouse( int event, int x, int y, int flags, void* )
 			//srcpt.push_back(Point(x,y));  //保存选取的点
 			cout << "The chosen point is : " << srcpt[ptflag].x << " , " << srcpt[ptflag].y << endl;
 			ptflag++;
-			/**
-			 * 1. 为什么这里是640，480？
-			 * 		因为我希望它这么大
-			*/
+			
+			
+			  		
+			
 			if(ptflag == 4)
 			{
 				ptflag = 0;
 				cout << "Work has done\n" << endl;
 				dstpt[0] = Point2f(0,0);
-				dstpt[3] = Point2f(0,640);
+				dstpt[1] = Point2f(0,640);
 				dstpt[2] = Point2f(480,640);
-				dstpt[1] = Point2f(480,0);
+				dstpt[3] = Point2f(480,0);
+				
+				
 			
 				//求取映射矩阵
 				perImage = Mat::zeros(640,480, CV_8UC3);   //这里的zeros 第一个参数是rows 行  第二是cols 列  和width（）函数定义正好相反
 				Mat transMat = getPerspectiveTransform(srcpt, dstpt);
 				warpPerspective(pic, perImage, transMat, perImage.size());	
-				imshow("fuck", perImage);
+				imshow("perspectived", perImage);
 
 				imwrite("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/Perspectived.jpg",perImage);	
 
 				if(ptflag == 0)// 如果点击次数为0，提取图片
 				{
-					psrcImage = imread("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/result1.jpg",1);
+					psrcImage = imread("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/Perspectived.jpg",1);
 					cvtColor(psrcImage, pmidImage, COLOR_RGB2GRAY);
-					namedWindow("process", 1);
+					namedWindow("process", WINDOW_NORMAL);
 					createTrackbar("value", "process", &threshold_value, 255, on_Change);
 				}
 			}
@@ -426,4 +462,9 @@ static void on_Mouse( int event, int x, int y, int flags, void* )
 			break;
 	}
 }
+
+
+
+
+
 

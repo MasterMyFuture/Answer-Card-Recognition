@@ -1,6 +1,8 @@
 #include <opencv2\opencv.hpp>
 
 
+
+
 void preprocess(cv::Mat &rsrcImage, cv::Mat &dstImage);
 
 //int getImageShadow(const cv::Mat & src);
