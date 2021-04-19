@@ -19,13 +19,14 @@ vector<Point2f> srcpt(4);
 vector<Point2f> dstpt(4);
 vector<string> Answer(NUMS);
 int ptflag=0;
+int threshold_value = 100;
 Mat pic;
 Mat perImage;
 Mat pdstImage;
 Mat pmidImage;
 Mat psrcImage;
 
-int threshold_value = 100;
+
 static void on_Mouse(int event, int x, int y, int flags, void *);
 void on_Change(int, void*);
 void process_Pic1(Mat srcImage);
