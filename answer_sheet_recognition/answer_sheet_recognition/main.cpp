@@ -10,6 +10,8 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include "paperChecker.h"
+
 using namespace std;
 using namespace cv;
 const int NUMS = 20;
@@ -26,19 +28,27 @@ Mat psrcImage;
 int threshold_value = 100;
 static void on_Mouse(int event, int x, int y, int flags, void *);
 void on_Change(int, void*);
-void process_Pic1();
+void process_Pic1(Mat srcImage);
 void project_Pic(const Mat & src, vector<int> & horizon_out, vector<int> & vertical_out);
 void findMax(const vector<int> & inputArray, vector<int> & maxIndex);
-int findVerMax(const vector<int> & inputArray, vector<int> & upIndex, vector<int> & downIndex);
-void findVerticalMax(const vector<int> & inputArray, vector<int> & maxIndex);
-void findLocHorizon(const vector<int> & inputArray, vector<int> & locUp, vector<int> & locDown);
 void picCut(const Mat & inputArray, Mat & outputArray, const Rect & rectRoi);
 void findAnswer(const vector<int> & input, const vector<int> locUp, const vector<int> locDown, string & ans);
 int main()
 {
 	Mat dstImage;
 	Mat midImage;
-	process_Pic1();
+	Mat srcImage = imread("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/1.jpg",1);
+
+
+
+	preprocess(srcImage,dstImage);
+
+
+	//getImageShadow(dstImage,horizon,vertical);
+	getRegion(dstImage);
+	//namedWindow("src", WINDOW_NORMAL);
+	//imshow("src",srcImage);
+	//process_Pic1(srcImage);
 	waitKey(0);
 	return 0;
 
@@ -46,7 +56,7 @@ int main()
 
 int findVerMax(const vector<int> & inputArray, vector<int> & upIndex, vector<int> & downIndex)
 {
-	int length = inputArray.size();  //0 黑色  255白色
+	size_t length = inputArray.size();  //0 黑色  255白色
 	int maxValue = inputArray[0];
 	int m = 0,n= 0;
 	int maxIndex = 0;
@@ -71,9 +81,14 @@ int findVerMax(const vector<int> & inputArray, vector<int> & upIndex, vector<int
 	return maxIndex;
 }
 
+/**
+ * 1. 为什么要写这个函数？
+ * 
+*/
+
 void findVerticalMax(const vector<int> & inputArray, vector<int> & maxIndex)
 {
-	int length = inputArray.size();
+	size_t length = inputArray.size();
 	int maxVal = 0;
 	int maxInd = 0;
 	//找到最大的index
@@ -109,7 +124,7 @@ void findVerticalMax(const vector<int> & inputArray, vector<int> & maxIndex)
 void findMax(const vector<int> & inputArray, vector<int> & maxIndex)
 {
 	//vector<int> maxIndex(2);
-	int length = inputArray.size();
+	size_t length = inputArray.size();
 	int maxValue1 = inputArray[0];
 	maxIndex[0] = 0;
 	for(int i = 1; i < length/2; i++)
@@ -141,30 +156,36 @@ void findMax(const vector<int> & inputArray, vector<int> & maxIndex)
 }
 
 //第一种方法，使用形态学滤波的方式对图像预处理
-void process_Pic1()
+
+void process_Pic1(Mat rsrcImage)
 {
 
 // 图像预处理
 // 得到二值化图像，基本能够分离出涂卡位置，为后面处理提供源
-// 这个阶段重难点： 1、透视变换的准确性   2、二值化阈值的选取合理性 3、形态学滤波
-	Mat rsrcImage = imread("D:\\C++程序联系文件夹（可选择性删除）\\Answer-Card-Recognition\\pic\\result1.jpg",1);
+// 这个阶段重难点： 1、透视变换的准确性   2、二值化阈值的选取合理性 3、形态学滤
 	Mat rGrayImage;
 	Mat rBinImage;
-	cvtColor(rsrcImage,rGrayImage, CV_BGR2GRAY);  //灰度化
+
+
+	cvtColor(rsrcImage,rGrayImage, COLOR_BGR2GRAY );  //灰度化
 	//CV_THRESH_OTSU参数自动生成阈值，跟第三个参数也就没有关系了。 
-    threshold(rGrayImage, rBinImage, 0, 255,  CV_THRESH_BINARY | CV_THRESH_OTSU); //二值化
+    threshold(rGrayImage, rBinImage, 0, 255,  THRESH_BINARY | THRESH_OTSU); //二值化
 	///imshow("binary image", rBinImage);
 	Mat erodeImage, dilateImage, edImage;
 	//定义核  
 	Mat element = getStructuringElement(MORPH_RECT, Size(3, 3));   
 	//进行形态学操作 	
 	morphologyEx(rBinImage, edImage, MORPH_CLOSE, element,Point(-1,-1),1);
-	imshow("先膨胀后腐蚀--闭运算", edImage);
+	imshow("MORPH_CLOSE",edImage);
 
 	
 // 图像垂直投影 得到定位标位置，并切割
 // 图像水平投影  得到答题卡区域位置，并切割
 // 此段处理的图像源： edImage
+/**
+ * 1. 为什么这里是locIndex[0]和locIndex[1]
+ * 		因为这个vector只放两个值，且是x
+ * **/
 	Mat psrcImage(edImage);  //处理源图像
 	vector<int> horizon(psrcImage.rows);
 	vector<int> vertical(psrcImage.cols);
@@ -173,6 +194,7 @@ void process_Pic1()
 	//查找定位标
 	vector<int> locIndex;
 	findVerticalMax(vertical, locIndex);
+	
 	Mat locImage;
 	psrcImage(Rect(locIndex[0],0, locIndex[1] - locIndex[0] + 1, psrcImage.rows-1) ).copyTo(locImage);
 	imshow("LocateImage", locImage);
@@ -188,7 +210,7 @@ void process_Pic1()
 	{
 		Mat tempq;
 		psrcImage.copyTo(tempq);
-		int lengthq = locUpIndex.size();
+		size_t lengthq = locUpIndex.size();
 		for(int i = 0; i < lengthq ; i++)
 		{
 			Point ppt1 = Point(0,locUpIndex[i]);
@@ -203,6 +225,11 @@ void process_Pic1()
 // #endif
 	
 	Mat answer;
+	//切割
+	/**
+	 * 1.为什么是11和17-11？
+	 * 2. 为什么这里的宽度用原图宽度？
+	*/
 	picCut(psrcImage,answer, Rect(0,locDownIndex[11], psrcImage.cols-1, locUpIndex[17]-locDownIndex[11]));
 
 	vector<int> ansHorizon(answer.rows);
@@ -227,7 +254,7 @@ void process_Pic1()
 
 void findAnswer(const vector<int> & input, const vector<int> locUp, const vector<int> locDown, string & ans)
 {
-	int length = input.size();
+	size_t length = input.size();
 	int m, n;
 	for(int i = 1; i < length; i++)
 	{
@@ -270,7 +297,7 @@ void picCut(const Mat & inputArray, Mat & outputArray, const Rect & rectRoi)
 
 void findLocHorizon(const vector<int> & inputArray, vector<int> & locUp, vector<int> & locDown)
 {
-	int length = inputArray.size();  //
+	size_t length = inputArray.size();  //
 	int upNums = 0, downNums = 0;
 	for(int i = 1; i < length; i++)
 	{
@@ -359,11 +386,15 @@ static void on_Mouse( int event, int x, int y, int flags, void* )
 	}		
 	switch(event)
 	{
-		case CV_EVENT_LBUTTONUP :
+		case EVENT_LBUTTONUP:
 			srcpt[ptflag] = Point(x,y);
 			//srcpt.push_back(Point(x,y));  //保存选取的点
 			cout << "The chosen point is : " << srcpt[ptflag].x << " , " << srcpt[ptflag].y << endl;
 			ptflag++;
+			/**
+			 * 1. 为什么这里是640，480？
+			 * 		因为我希望它这么大
+			*/
 			if(ptflag == 4)
 			{
 				ptflag = 0;
@@ -379,12 +410,12 @@ static void on_Mouse( int event, int x, int y, int flags, void* )
 				warpPerspective(pic, perImage, transMat, perImage.size());	
 				imshow("fuck", perImage);
 
-				imwrite("D:\\C++程序联系文件夹（可选择性删除）\\Answer-Card-Recognition\\pic\\result.jpg",perImage);	
+				imwrite("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/Perspectived.jpg",perImage);	
 
-				if(ptflag == 0)
+				if(ptflag == 0)// 如果点击次数为0，提取图片
 				{
-					psrcImage = imread("D:\\C++程序联系文件夹（可选择性删除）\\Answer-Card-Recognition\\pic\\result1.jpg",1);
-					cvtColor(psrcImage, pmidImage, CV_RGB2GRAY);
+					psrcImage = imread("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/result1.jpg",1);
+					cvtColor(psrcImage, pmidImage, COLOR_RGB2GRAY);
 					namedWindow("process", 1);
 					createTrackbar("value", "process", &threshold_value, 255, on_Change);
 				}

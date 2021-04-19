@@ -1,0 +1,5 @@
+D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/answer_sheet_recognition/out/build/x64-Debug (默认值)/CMakeFiles/edit_cache.dir
+D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/answer_sheet_recognition/out/build/x64-Debug (默认值)/CMakeFiles/rebuild_cache.dir
+D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/answer_sheet_recognition/out/build/x64-Debug (默认值)/answer_sheet_recognition/CMakeFiles/edit_cache.dir
+D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/answer_sheet_recognition/out/build/x64-Debug (默认值)/answer_sheet_recognition/CMakeFiles/answer_check.dir
+D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/answer_sheet_recognition/out/build/x64-Debug (默认值)/answer_sheet_recognition/CMakeFiles/rebuild_cache.dir

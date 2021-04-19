@@ -11,8 +11,6 @@ C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/Common
 C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.18/Modules/Compiler/CMakeCommonCompilerMacros.cmake
 C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.18/Modules/Compiler/MSVC-C.cmake
 C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.18/Modules/Compiler/MSVC-CXX.cmake
-C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.18/Modules/FindPackageHandleStandardArgs.cmake
-C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.18/Modules/FindPackageMessage.cmake
 C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.18/Modules/Platform/Windows-MSVC-C.cmake
 C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.18/Modules/Platform/Windows-MSVC-CXX.cmake
 C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.18/Modules/Platform/Windows-MSVC.cmake
@@ -23,6 +21,3 @@ D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/build/CMakeFiles/3.18.200
 D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/build/CMakeFiles/3.18.20081302-MSVC_2/CMakeCXXCompiler.cmake
 D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/build/CMakeFiles/3.18.20081302-MSVC_2/CMakeRCCompiler.cmake
 D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/build/CMakeFiles/3.18.20081302-MSVC_2/CMakeSystem.cmake
-F:/cpp/opencv/build/OpenCVConfig-version.cmake
-F:/cpp/opencv/build/OpenCVConfig.cmake
-F:/cpp/opencv/build/OpenCVModules.cmake
