@@ -15,4 +15,6 @@ int findVerMax(const std::vector<int> & inputArray, std::vector<int> & upIndex, 
 
 void findLocHorizon(const std::vector<int> & inputArray, std::vector<int> & locUp, std::vector<int> & locDown);
 
-void getRegion(cv::Mat &edImage);
+void getAnswerRegion(cv::Mat &edImage);
+
+void getBarIndex(const std::vector<int> & inputArray, std::vector<int> & begin, std::vector<int> & end);

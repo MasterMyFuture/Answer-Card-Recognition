@@ -38,25 +38,29 @@ int main()
 {
 	Mat dstImage;
 	Mat midImage;
+	bool isPers = true;
 	//pic = imread("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/1.jpg",1);
-	Mat srcImage = imread("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/Perspectived.jpg",1);
-	//Mat scale(640,480,CV_8UC1,Scalar(0));
-	std::vector<int> horizon(srcImage.rows);
-	std::vector<int> vertical(srcImage.cols);
 
+	if(isPers){
+		Mat srcImage = imread("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/Perspectived.jpg",1);
+		//Mat scale(640,480,CV_8UC1,Scalar(0));
+		std::vector<int> horizon(srcImage.rows);
+		std::vector<int> vertical(srcImage.cols);
+		preprocess(srcImage,dstImage);
+		getAnswerRegion(dstImage);
 
-
-	preprocess(srcImage,dstImage);
-
-
-	getImageShadow(dstImage,horizon,vertical);
-	namedWindow("input",WINDOW_NORMAL);
-	imshow("input",dstImage);
+	}else{
+	//getImageShadow(dstImage,horizon,vertical);
+	//namedWindow("input",WINDOW_NORMAL);
+	//imshow("input",dstImage);
 	//setMouseCallback("input",on_Mouse,0);
 	//imshow("scale",scale);
 	//getRegion(dstImage);
 	//namedWindow("src", WINDOW_NORMAL);
 	//imshow("src",srcImage);
+
+	}
+
 	//process_Pic1(srcImage);
 	waitKey(0);
 	return 0;
@@ -220,6 +224,9 @@ void process_Pic1(Mat rsrcImage)
 	 * 
 	 * 2.为什么要画线？
 	 * 
+	 * 3. 为什么我在图中没看到线？
+	 * 4. 它们是什么形状？
+	 * 
 	*/
 	if(locUpIndex.size() == locDownIndex.size())
 	{
@@ -239,15 +246,22 @@ void process_Pic1(Mat rsrcImage)
 	}
 // #endif
 	
-	Mat answer;
+	
 	//切割
 	/**
 	 * 1.为什么是11和17-11？
 	 * 	因为准考证刚好占11个黑色条，第一栏答案刚好是到第17条结束
-	 * 2. 为什么这里的宽度用原图宽度？
+	 * 2. 为什么picCut的宽度用原图宽度？
+	 * 
 	 * 3. NUMS有什么用？为什么是20？
 	 * 		因为第一栏有20道题
+	 * 4. 为什么切掉条纹后不会发生一行全A，然后？
+	 * 		使用原来的Index vector去定位
+	 * 5. 为什么这里的是findLocHorizon(ansVertical, ansUpIndex, ansDownIndex)？
+	 * 		因为它想用纵向的方法来区别横向，即第几题
+	 * 		
 	*/
+	Mat answer;
 	picCut(psrcImage,answer, Rect(0,locDownIndex[11], psrcImage.cols-1, locUpIndex[17]-locDownIndex[11]));
 
 	vector<int> ansHorizon(answer.rows);
@@ -257,7 +271,11 @@ void process_Pic1(Mat rsrcImage)
 	findLocHorizon(ansVertical, ansUpIndex, ansDownIndex);
 	//imshow("answer", answer);
 
-
+	/*** 1.没有横向的条纹，怎么判断是第几题？
+	 * 		作者假设每一题都有答案，然后用垂直投影找出每一题的index
+	 * 		这个假设只影响题目迭代
+	 * 
+	 * */
 	for(int i = 0; i < NUMS; i ++)
 	{
 		Mat tempAns = answer(Rect(ansUpIndex[i], 0, ansDownIndex[i] - ansUpIndex[i] , answer.rows));
@@ -272,6 +290,14 @@ void process_Pic1(Mat rsrcImage)
 /**
  * 1. 为什么要locUp和locDown两个向量？
  * 		因为loc表示右边条纹
+ * 2. 为什么它可以区分右边的条纹和答案？
+ * 
+ * 3. 它是如何判断ABCD？
+ * 		求出填涂答案的上边界m和下边界n，求出水平中位线
+ * 		用中位线和右边条纹的上下boder比
+ * 
+ * 4. 为什么要求mid？
+ * 		求填涂答案的水平中位线
 */
 void findAnswer(const vector<int> & input, const vector<int> locUp, const vector<int> locDown, string & ans)
 {
@@ -410,7 +436,9 @@ void project_Pic(const Mat & src, vector<int> & horizon_out, vector<int> & verti
 /**-----------------------------------【onMouse( )函数】---------------------------------------
 //		描述：鼠标消息回调函数
 //-----------------------------------------------------------------------------------------------
-//  1. 为什么这里是640，480，包括准考证号吗？
+
+  1. 为什么这里是640，480，包括准考证号吗？
+		以边框和黑色条纹的边角
 **/
 static void on_Mouse( int event, int x, int y, int flags, void* )
 {	

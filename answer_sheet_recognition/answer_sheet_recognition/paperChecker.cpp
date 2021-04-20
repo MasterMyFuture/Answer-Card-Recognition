@@ -35,7 +35,7 @@ void preprocess(cv::Mat &rsrcImage, cv::Mat &dstImage){
 void getImageShadow(const cv::Mat & src,std::vector<int> &horizon,std::vector<int> &vertical)
 {
 	if(src.empty()){
-		std::cout<<"img is empty!"<<std::endl;	
+		std::cout<<"src img is empty in getImageShadow()!"<<std::endl;	
 	}
 	// 对src进行二值化值统计
 	//horizontal 水平
@@ -87,17 +87,20 @@ void getImageShadow(const cv::Mat & src,std::vector<int> &horizon,std::vector<in
 			verImage.at<uchar>(j,i) = 0;
 	}
 
-	imshow("hor",horImage);
-	imshow("ver",verImage);
-	//imwrite("4.jpg",verImage);
-	//imwrite("3.jpg",horImage);
-	imwrite("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/verImage.jpg",verImage);
-	imwrite("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/horImage.jpg",horImage);
+	//imshow("hor",horImage);
+	//imshow("ver",verImage);
+
+	if(verImage.empty()&&horImage.empty()){
+		std::cout<<"verImage or horImage is empty!"<<std::endl;
+	}else{
+		imwrite("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/verImage.jpg",verImage);
+		imwrite("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/horImage.jpg",horImage);
+	}
 
 	
 }
 
-void getRegion(cv::Mat &edImage){
+void getAnswerRegion(cv::Mat &edImage){
 	// 图像垂直投影 得到定位标位置，并切割
 	// 图像水平投影  得到答题卡区域位置，并切割
 	// 此段处理的图像源： edImage
@@ -106,15 +109,21 @@ void getRegion(cv::Mat &edImage){
 	getImageShadow(edImage,horizon, vertical);
 	
 	//查找定位标
-	std::vector<int> locIndex;
-	findVerticalMax(vertical, locIndex);
-	cv::Mat locImage;
-	edImage(cv::Rect(locIndex[0],0, locIndex[1] - locIndex[0] + 1, edImage.rows-1) ).copyTo(locImage);
-	if(!locImage.empty()){
-		imshow("LocateImage", locImage);
-		
-
+	std::vector<int> headIndex;
+	std::vector<int> endIndex;
+	if(!vertical.empty()){
+		getBarIndex(vertical, headIndex,endIndex);
 	}
+	cv::Mat locImage;
+	if(headIndex.empty()&&endIndex.empty()){
+		std::cout<<"locIndex is empty!"<<std::endl;
+
+	}else{
+		
+		edImage(cv::Rect(headIndex[0],0, endIndex.back() - headIndex[0] + 1, edImage.rows-1) ).copyTo(locImage);
+		imshow("LocateImage", locImage);
+	}
+
 	
 	//如果不要求鲁棒性，就直接水平投影定位标就OK
 	std::vector<int> locHorizon(locImage.rows);
@@ -122,7 +131,11 @@ void getRegion(cv::Mat &edImage){
 	getImageShadow(locImage, locHorizon, locVertical);
 
 	std::vector<int> locUpIndex, locDownIndex;
-	findLocHorizon(locHorizon, locUpIndex, locDownIndex);
+	if (locHorizon.empty())
+	{
+		findLocHorizon(locHorizon, locUpIndex, locDownIndex);
+	}
+	
 // #ifdef 0
 	if(locUpIndex.size() == locDownIndex.size())
 	{
@@ -146,3 +159,23 @@ void getRegion(cv::Mat &edImage){
 	}
 }
 
+void getBarIndex(const std::vector<int> & inputArray, std::vector<int> & begin, std::vector<int> & end){
+	size_t length = inputArray.size();  //
+	int upNums = 0, downNums = 0;
+	for(int i = 1; i < length; i++)
+	{
+		if(inputArray[i-1] == 0 && inputArray[i] > 0)
+		{
+			begin.push_back(i);
+			upNums ++;
+		}
+		else if(inputArray[i-1] > 0 && inputArray[i] == 0)
+		{
+			end.push_back(i);
+			downNums ++;
+		}
+	}
+
+
+
+}
