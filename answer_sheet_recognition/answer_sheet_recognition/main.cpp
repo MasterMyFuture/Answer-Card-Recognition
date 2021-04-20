@@ -371,6 +371,9 @@ void findLocHorizon(const vector<int> & inputArray, vector<int> & locUp, vector<
 			downNums ++;
 		}
 	}
+	if(inputArray.back()!= 0){
+		locDown.push_back(inputArray.size());
+	}
 }
 
 void on_Change(int,void *)

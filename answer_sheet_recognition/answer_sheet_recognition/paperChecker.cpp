@@ -131,7 +131,7 @@ void getAnswerRegion(cv::Mat &edImage){
 	getImageShadow(locImage, locHorizon, locVertical);
 
 	std::vector<int> locUpIndex, locDownIndex;
-	if (locHorizon.empty())
+	if (!locHorizon.empty())
 	{
 		findLocHorizon(locHorizon, locUpIndex, locDownIndex);
 	}
@@ -150,7 +150,6 @@ void getAnswerRegion(cv::Mat &edImage){
 			cv::Point ppt4 = cv::Point(tempq.cols-1, locDownIndex[i]);
 			line(tempq, ppt1, ppt2, cv::Scalar(100));
 			line(tempq, ppt3, ppt4, cv::Scalar(100));
-			cv::circle(tempq,cv::Point(30,30),10,cv::Scalar(20),-1);
 		}
 		if (!tempq.empty())
 		{
