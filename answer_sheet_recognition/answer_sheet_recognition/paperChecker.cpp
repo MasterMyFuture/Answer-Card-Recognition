@@ -108,7 +108,7 @@ void getAnswerRegion(cv::Mat &edImage){
 	std::vector<int> vertical(edImage.cols);
 	getImageShadow(edImage,horizon, vertical);
 	
-	//查找定位标
+	
 	std::vector<int> headIndex;
 	std::vector<int> endIndex;
 	if(!vertical.empty()){
@@ -119,7 +119,7 @@ void getAnswerRegion(cv::Mat &edImage){
 		std::cout<<"locIndex is empty!"<<std::endl;
 
 	}else{
-		
+		// 求左右两边界
 		edImage(cv::Rect(headIndex[0],0, endIndex.back() - headIndex[0] + 1, edImage.rows-1) ).copyTo(locImage);
 		imshow("LocateImage", locImage);
 	}
@@ -148,8 +148,9 @@ void getAnswerRegion(cv::Mat &edImage){
 			cv::Point ppt2 = cv::Point(tempq.cols-1, locUpIndex[i]);
 			cv::Point ppt3 = cv::Point(0,locDownIndex[i]);
 			cv::Point ppt4 = cv::Point(tempq.cols-1, locDownIndex[i]);
-			line(tempq, ppt1, ppt2, cv::Scalar(0, 0, 100));
-			line(tempq, ppt3, ppt4, cv::Scalar(0, 0, 100));
+			line(tempq, ppt1, ppt2, cv::Scalar(100));
+			line(tempq, ppt3, ppt4, cv::Scalar(100));
+			cv::circle(tempq,cv::Point(30,30),10);
 		}
 		if (!tempq.empty())
 		{
