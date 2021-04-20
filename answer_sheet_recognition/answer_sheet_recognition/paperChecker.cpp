@@ -1,4 +1,6 @@
 #include "paperChecker.h"
+#include <vector>
+#include <string>
 
 void preprocess(cv::Mat &rsrcImage, cv::Mat &dstImage){
 	cv::Mat rGrayImage;
@@ -15,9 +17,10 @@ void preprocess(cv::Mat &rsrcImage, cv::Mat &dstImage){
 	//进行形态学操作 	
 	morphologyEx(rBinImage, dstImage, cv::MORPH_CLOSE, element,cv::Point(-1,-1),1);
 	
-	namedWindow("MORPH_CLOSE", cv::WINDOW_NORMAL);
-	if (!dstImage.empty())
+	
+	if (!dstImage.empty()&&DEBUG)
 	{
+		namedWindow("MORPH_CLOSE", cv::WINDOW_NORMAL);
 		imshow("MORPH_CLOSE",dstImage);
 	}
 	
@@ -99,11 +102,14 @@ void getImageShadow(const cv::Mat & src,std::vector<int> &horizon,std::vector<in
 
 	
 }
+/**
+ * 	 图像垂直投影 得到定位标位置，并切割
+	 图像水平投影  得到答题卡区域位置，并切割
+	 此段处理的图像源： edImage
+ * 
+*/
+void getYLocate(cv::Mat &edImage){
 
-void getAnswerRegion(cv::Mat &edImage){
-	// 图像垂直投影 得到定位标位置，并切割
-	// 图像水平投影  得到答题卡区域位置，并切割
-	// 此段处理的图像源： edImage
 	std::vector<int> horizon(edImage.rows);
 	std::vector<int> vertical(edImage.cols);
 	getImageShadow(edImage,horizon, vertical);
@@ -112,16 +118,18 @@ void getAnswerRegion(cv::Mat &edImage){
 	std::vector<int> headIndex;
 	std::vector<int> endIndex;
 	if(!vertical.empty()){
-		getBarIndex(vertical, headIndex,endIndex);
+		getShadowIndex(vertical, headIndex,endIndex);
 	}
 	cv::Mat locImage;
 	if(headIndex.empty()&&endIndex.empty()){
 		std::cout<<"locIndex is empty!"<<std::endl;
 
 	}else{
-		// 求左右两边界
-		edImage(cv::Rect(headIndex[0],0, endIndex.back() - headIndex[0] + 1, edImage.rows-1) ).copyTo(locImage);
-		imshow("LocateImage", locImage);
+		// 切割黑条
+		edImage(cv::Rect(headIndex.back(),0, endIndex.back()-headIndex.back(), edImage.rows-1) ).copyTo(locImage);
+		if(DEBUG){
+			imshow("LocateImage", locImage);
+		}
 	}
 
 	
@@ -133,7 +141,7 @@ void getAnswerRegion(cv::Mat &edImage){
 	std::vector<int> locUpIndex, locDownIndex;
 	if (!locHorizon.empty())
 	{
-		findLocHorizon(locHorizon, locUpIndex, locDownIndex);
+		getShadowIndex(locHorizon, locUpIndex, locDownIndex);
 	}
 	
 // #ifdef 0
@@ -156,10 +164,43 @@ void getAnswerRegion(cv::Mat &edImage){
 			imshow("srljsf", tempq);
 		}
 		
+		
+	}
+
+	getAnswerList(edImage, locUpIndex, locDownIndex);
+	
+}
+
+void getAnswerList(cv::Mat &edImage, const std::vector<int> locUpIndex, const std::vector<int> locDownIndex){
+
+	cv::Mat	answer = edImage(cv::Rect(0,locDownIndex[11], edImage.cols-1, locUpIndex[17]-locDownIndex[11]));
+
+
+	std::vector<int> ansHorizon(answer.rows);
+	std::vector<int> ansVertical(answer.cols);
+	getImageShadow(answer, ansHorizon, ansVertical);
+	std::vector<int> ansUpIndex, ansDownIndex;
+	getShadowIndex(ansVertical, ansUpIndex, ansDownIndex);
+	if(DEBUG){
+		imshow("answer", answer);
+	}
+	static std::vector<std::string> answerList(NUMS);
+	for(int i = 0; i < NUMS; i ++)
+	{
+		cv::Mat tempAns = answer(cv::Rect(ansUpIndex[i], 0, ansDownIndex[i] - ansUpIndex[i] , answer.rows));
+		std::vector<int> tmpHorizon(tempAns.rows);
+		std::vector<int> tmpVertical(tempAns.cols);
+		getImageShadow(tempAns,tmpHorizon, tmpVertical);
+		findAnswer(tmpHorizon, locUpIndex, locDownIndex, answerList[i]);
+		std::cout << i+1 << " : "<< answerList[i] << std::endl;
 	}
 }
 
-void getBarIndex(const std::vector<int> & inputArray, std::vector<int> & begin, std::vector<int> & end){
+
+
+
+
+void getShadowIndex(const std::vector<int> & inputArray, std::vector<int> & begin, std::vector<int> & end){
 	size_t length = inputArray.size();  //
 	int upNums = 0, downNums = 0;
 	for(int i = 1; i < length; i++)
@@ -174,8 +215,63 @@ void getBarIndex(const std::vector<int> & inputArray, std::vector<int> & begin, 
 			end.push_back(i);
 			downNums ++;
 		}
+		
+	}
+	if(inputArray.back()!= 0){
+		end.push_back(inputArray.size());
 	}
 
 
 
 }
+
+/**
+ * 1. 为什么要locUp和locDown两个向量？
+ * 		因为loc表示右边条纹
+ * 2. 为什么它可以区分右边的条纹和答案？
+ * 
+ * 3. 它是如何判断ABCD？
+ * 		求出填涂答案的上边界m和下边界n，求出水平中位线
+ * 		用中位线和右边条纹的上下boder比
+ * 
+ * 4. 为什么要求mid？
+ * 		求填涂答案的水平中位线
+*/
+void findAnswer(const std::vector<int> & input, const std::vector<int> locUp, const std::vector<int> locDown, std::string & ans)
+{
+	size_t length = input.size();
+	int m, n;
+	for(int i = 1; i < length; i++)
+	{
+		if(input[i-1] == 0 && input[i] >0)
+		{
+			m = i;	
+		}
+		else if(input[i-1] > 0 && input[i] == 0 )
+		{
+			n = i;
+		}
+	}
+	int mid = (int)(m+n)/2 + locDown[11];
+	if(mid >= locUp[13] && mid <= locDown[13])  //A
+	{
+		ans = 'A';
+	}
+	else if(mid >= locUp[14] && mid <= locDown[14])
+	{
+		ans = 'B';
+	}
+	else if(mid >= locUp[15] && mid <= locDown[15])
+	{
+		ans = 'C';
+	}
+	else if(mid >= locUp[16] && mid <= locDown[16]) //D
+	{
+		ans = 'D';
+	}
+	else
+	{
+		ans = "None";
+	}
+}
+

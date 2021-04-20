@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "answer_sheet_recognition/Debug/answer_check.exe"
+			"path" : "answer_sheet_recognition/MinSizeRel/answer_check.exe"
 		},
 		{
-			"path" : "answer_sheet_recognition/Debug/answer_check.pdb"
+			"path" : "answer_sheet_recognition/MinSizeRel/answer_check.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -30,25 +30,25 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 15,
+				"line" : 20,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 12,
+				"line" : 17,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 18,
+				"line" : 29,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 11,
+				"line" : 16,
 				"parent" : 0
 			}
 		]
@@ -59,7 +59,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1"
+					"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /O1 /Ob1 /DNDEBUG"
 				}
 			],
 			"includes" : 
@@ -334,7 +334,8 @@
 			"sourceIndexes" : 
 			[
 				0,
-				1
+				1,
+				3
 			]
 		}
 	],
@@ -350,11 +351,11 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1",
+				"fragment" : "/DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /O1 /Ob1 /DNDEBUG",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "/machine:x64 /debug /INCREMENTAL /subsystem:console",
+				"fragment" : "/machine:x64 /INCREMENTAL:NO /subsystem:console",
 				"role" : "flags"
 			},
 			{
@@ -609,252 +610,252 @@
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_gapi451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_gapi451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_aruco451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_aruco451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_bgsegm451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_bgsegm451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_bioinspired451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_bioinspired451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_ccalib451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_ccalib451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_dnn_objdetect451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_dnn_objdetect451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_dnn_superres451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_dnn_superres451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_dpm451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_dpm451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_face451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_face451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_fuzzy451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_fuzzy451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_hdf451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_hdf451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_hfs451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_hfs451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_img_hash451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_img_hash451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_intensity_transform451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_intensity_transform451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_line_descriptor451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_line_descriptor451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_mcc451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_mcc451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_quality451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_quality451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_rapid451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_rapid451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_reg451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_reg451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_rgbd451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_rgbd451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_saliency451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_saliency451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_stereo451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_stereo451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_structured_light451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_structured_light451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_superres451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_superres451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_surface_matching451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_surface_matching451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_tracking451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_tracking451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_videostab451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_videostab451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_xfeatures2d451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_xfeatures2d451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_xobjdetect451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_xobjdetect451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_xphoto451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_xphoto451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_highgui451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_highgui451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_datasets451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_datasets451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_plot451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_plot451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_text451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_text451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_phase_unwrapping451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_phase_unwrapping451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_optflow451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_optflow451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_ximgproc451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_ximgproc451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_video451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_video451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_dnn451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_dnn451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_videoio451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_videoio451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_ml451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_ml451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_shape451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_shape451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_imgcodecs451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_imgcodecs451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_objdetect451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_objdetect451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_calib3d451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_calib3d451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_features2d451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_features2d451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_flann451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_flann451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_photo451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_photo451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_imgproc451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_imgproc451.lib",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Debug\\opencv_core451d.lib",
+				"fragment" : "F:\\cpp\\opencv\\build\\lib\\Release\\opencv_core451.lib",
 				"role" : "libraries"
 			},
 			{
@@ -878,14 +879,16 @@
 			"sourceIndexes" : 
 			[
 				0,
-				1
+				1,
+				3
 			]
 		},
 		{
 			"name" : "Header Files",
 			"sourceIndexes" : 
 			[
-				2
+				2,
+				4
 			]
 		}
 	],
@@ -906,6 +909,17 @@
 		{
 			"backtrace" : 1,
 			"path" : "answer_sheet_recognition/paperChecker.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "answer_sheet_recognition/axis.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "answer_sheet_recognition/axis.h",
 			"sourceGroupIndex" : 1
 		}
 	],

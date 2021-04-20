@@ -1,4 +1,9 @@
+# CMakeList.txt: cmake-cv 的 CMake 项目，在此处包括源代码并定义
+# 项目特定的逻辑。
+#
 cmake_minimum_required (VERSION 3.8)
+
+
 
 set(OpenCV_DIR "F:/cpp/opencv/build")
 find_package(OpenCV REQUIRED)
@@ -12,7 +17,15 @@ include_directories(${OpenCV_INCLUDE_DIRS} )
 link_directories(${OpenCV_LIBS})
 
 
-add_executable (${PROJECT_NAME} "main.cpp" "paperChecker.cpp" "paperChecker.h")
-
+add_executable (${PROJECT_NAME} 
+    "main.cpp" 
+    "paperChecker.cpp" 
+    "paperChecker.h"
+    "axis.cpp" 
+    "axis.h"
+    )
+   
 
 target_link_libraries(${PROJECT_NAME}  ${OpenCV_LIBS})
+
+
