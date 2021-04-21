@@ -1,5 +1,4 @@
 #include "paperChecker.h"
-#include "axis.h"
 #include <vector>
 #include <string>
 
@@ -30,79 +29,7 @@ void preprocess(cv::Mat &rsrcImage, cv::Mat &dstImage){
 }
 
 
-//函数作用： 将图像水平和垂直投影，得到 水平和垂直投影的图
-//返回： horizon_out 水平投影的图
-//		 vertical_out 垂直投影的图
-/**
- * 1.为什么要投影？
-*/
-void getImageShadow(const cv::Mat & src,std::vector<int> &horizon,std::vector<int> &vertical)
-{
-	if(src.empty()){
-		std::cout<<"src img is empty in getImageShadow()!"<<std::endl;	
-	}
-	// 对src进行二值化值统计
-	//horizontal 水平
 
-	
-	int pixelValue = 0;
-	for(int i = 0; i < src.rows; i++)   //有多少行
-	{
-		for(int j = 0; j < src.cols; j++)
-		{
-			if(src.at<uchar>(i,j) == 0)
-				pixelValue++;
-		}
-		horizon[i] = pixelValue;
-		pixelValue = 0;
-	}
-
-	//vertical 垂直
-	//vector<int> vertical_out;
-	for(int i = 0; i < src.cols; i++)
-	{
-		for(int j = 0; j < src.rows; j ++)
-		{
-			if(src.at<uchar>(j,i) == 0)
-				pixelValue++;
-		}
-		vertical[i] = pixelValue;
-		pixelValue = 0;
-	}
-	// show it
-	/**
-	 * 如何把图像投影画出来看？
-	 * 2. 为什么没有生成Mat
-	*/
-
-	cv::Mat horImage(src.rows, src.cols, CV_8UC1,cv::Scalar(255));
-	cv::Mat verImage(src.rows, src.cols, CV_8UC1,cv::Scalar(255));
-
-
-	// horizon
-	for(int i = 0; i < horImage.rows; i++)
-	{
-		for(int j = 0; j < horizon[i]; j++)
-			horImage.at<uchar>(i,j) = 0;  //假设初始化为0；
-	}
-	for(int i = 0; i < verImage.cols; i ++)
-	{
-		for(int j = 0; j < vertical[i]; j++)
-			verImage.at<uchar>(j,i) = 0;
-	}
-
-	//imshow("hor",horImage);
-	//imshow("ver",verImage);
-
-	if(verImage.empty()&&horImage.empty()){
-		std::cout<<"verImage or horImage is empty!"<<std::endl;
-	}else{
-		imwrite("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/verImage.jpg",verImage);
-		imwrite("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/horImage.jpg",horImage);
-	}
-
-	
-}
 /**
  * 	 图像垂直投影 得到定位标位置，并切割
 	 图像水平投影  得到答题卡区域位置，并切割
@@ -111,15 +38,18 @@ void getImageShadow(const cv::Mat & src,std::vector<int> &horizon,std::vector<in
 */
 void getYLocate(cv::Mat &edImage){
 
-	std::vector<int> horizon(edImage.rows);
-	std::vector<int> vertical(edImage.cols);
-	getImageShadow(edImage,horizon, vertical);
-	
 	Axis *xcoord = new Axis();
 
-	if(!vertical.empty()){
+	//std::vector<int> horizon(edImage.rows);
+	//std::vector<int> vertical(edImage.cols);
+	//getImageShadow(edImage,horizon, vertical);
+	xcoord->getImageShadow(edImage);
+	
+	
+
+	if(!xcoord->verShadow.empty()){
 		//getShadowIndex(vertical, headIndex,endIndex);
-		xcoord->getShadowIndex(vertical);
+		xcoord->getShadowIndex(xcoord->verShadow);
 	}
 	cv::Mat locImage;
 	if(xcoord->headIndex.empty()&&xcoord->endIndex.empty()){
@@ -135,19 +65,18 @@ void getYLocate(cv::Mat &edImage){
 
 	
 	//如果不要求鲁棒性，就直接水平投影定位标就OK
-	std::vector<int> locHorizon(locImage.rows);
-	std::vector<int> locVertical(locImage.cols);
-	getImageShadow(locImage, locHorizon, locVertical);
-
 	Axis *ycoord = new Axis();
-	if (!locHorizon.empty())
+	ycoord->getImageShadow(locImage);
+
+	
+	if (!ycoord->horShadow.empty())
 	{
 		//getShadowIndex(locHorizon, locUpIndex, locDownIndex);
-		ycoord->getShadowIndex(locHorizon);
+		ycoord->getShadowIndex(ycoord->horShadow);
 	}
 	
 // #ifdef 0
-	if(ycoord->headIndex.size() == ycoord->endIndex.size())
+	if(ycoord->headIndex.size() == ycoord->endIndex.size()&&DEBUG)
 	{
 		cv::Mat tempq;
 		edImage.copyTo(tempq);
@@ -169,13 +98,13 @@ void getYLocate(cv::Mat &edImage){
 		
 	}
 
-	getAnswerList(edImage, ycoord->headIndex, ycoord->endIndex);
+	getAnswerList(edImage, ycoord);
 	
 }
 
-void getAnswerList(cv::Mat &edImage, const std::vector<int> locUpIndex, const std::vector<int> locDownIndex){
+void getAnswerList(cv::Mat &edImage, Axis *ycoord){
 
-	cv::Mat	answer = edImage(cv::Rect(0,locDownIndex[11], edImage.cols-1, locUpIndex[17]-locDownIndex[11]));
+	cv::Mat	answer = edImage(cv::Rect(0,ycoord->endIndex[11], edImage.cols-1, ycoord->headIndex[17]-ycoord->endIndex[11]));
 
 	Axis *anscoord = new Axis();
 	anscoord->getImageShadow(answer);
@@ -192,10 +121,11 @@ void getAnswerList(cv::Mat &edImage, const std::vector<int> locUpIndex, const st
 	{
 		cv::Mat tempAns = answer(cv::Rect(anscoord->headIndex[i], 0, anscoord->endIndex[i] - anscoord->headIndex[i] , answer.rows));
 		sincoord = new Axis();
-		std::vector<int> tmpHorizon(tempAns.rows);
-		std::vector<int> tmpVertical(tempAns.cols);
-		getImageShadow(tempAns,sincoord->horShadow, sincoord->verShadow);
-		findAnswer(tmpHorizon, sincoord->horShadow, sincoord->verShadow, answerList[i]);
+		//std::vector<int> tmpHorizon(tempAns.rows);
+		//std::vector<int> tmpVertical(tempAns.cols);
+		//getImageShadow(tempAns,sincoord->horShadow, sincoord->verShadow);
+		sincoord->getImageShadow(tempAns);
+		findAnswer(sincoord->horShadow, ycoord, answerList[i]);
 		std::cout << i+1 << " : "<< answerList[i] << std::endl;
 	}
 }
@@ -204,30 +134,7 @@ void getAnswerList(cv::Mat &edImage, const std::vector<int> locUpIndex, const st
 
 
 
-void getShadowIndex(const std::vector<int> & inputArray, std::vector<int> & begin, std::vector<int> & end){
-	size_t length = inputArray.size();  //
-	int upNums = 0, downNums = 0;
-	for(int i = 1; i < length; i++)
-	{
-		if(inputArray[i-1] == 0 && inputArray[i] > 0)
-		{
-			begin.push_back(i);
-			upNums ++;
-		}
-		else if(inputArray[i-1] > 0 && inputArray[i] == 0)
-		{
-			end.push_back(i);
-			downNums ++;
-		}
-		
-	}
-	if(inputArray.back()!= 0){
-		end.push_back(inputArray.size());
-	}
 
-
-
-}
 
 /**
  * 1. 为什么要locUp和locDown两个向量？
@@ -241,7 +148,7 @@ void getShadowIndex(const std::vector<int> & inputArray, std::vector<int> & begi
  * 4. 为什么要求mid？
  * 		求填涂答案的水平中位线
 */
-void findAnswer(const std::vector<int> & input, const std::vector<int> locUp, const std::vector<int> locDown, std::string & ans)
+void findAnswer(const std::vector<int> & input, Axis *y, std::string & ans)
 {
 	size_t length = input.size();
 	int m, n;
@@ -256,20 +163,20 @@ void findAnswer(const std::vector<int> & input, const std::vector<int> locUp, co
 			n = i;
 		}
 	}
-	int mid = (int)(m+n)/2 + locDown[11];
-	if(mid >= locUp[13] && mid <= locDown[13])  //A
+	int mid = (int)(m+n)/2 + y->endIndex[11];
+	if(mid >= y->headIndex[13] && mid <= y->endIndex[13])  //A
 	{
 		ans = 'A';
 	}
-	else if(mid >= locUp[14] && mid <= locDown[14])
+	else if(mid >= y->headIndex[14] && mid <= y->endIndex[14])
 	{
 		ans = 'B';
 	}
-	else if(mid >= locUp[15] && mid <= locDown[15])
+	else if(mid >= y->headIndex[15] && mid <= y->endIndex[15])
 	{
 		ans = 'C';
 	}
-	else if(mid >= locUp[16] && mid <= locDown[16]) //D
+	else if(mid >= y->headIndex[16] && mid <= y->endIndex[16]) //D
 	{
 		ans = 'D';
 	}

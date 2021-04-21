@@ -40,13 +40,11 @@ int main()
 
 	if(!srcImage.empty()){
 		
-		//Mat scale(640,480,CV_8UC1,Scalar(0));
 		std::vector<int> horizon(srcImage.rows);
 		std::vector<int> vertical(srcImage.cols);
 		preprocess(srcImage,dstImage);
-		//getYLocate(dstImage,horizon, vertical);
 		getYLocate(dstImage);
-		//getAnswerRegion(dstImage);
+		
 
 	}else{
 

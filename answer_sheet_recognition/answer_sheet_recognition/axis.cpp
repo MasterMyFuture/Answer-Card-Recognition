@@ -39,7 +39,8 @@ void Axis::getImageShadow(const cv::Mat & src){
 			if(src.at<uchar>(i,j) == 0)
 				pixelValue++;
 		}
-		this->horShadow[i] = pixelValue;
+		//this->horShadow[i] = pixelValue;
+		this->horShadow.push_back(pixelValue);
 		pixelValue = 0;
 	}
 
@@ -52,7 +53,8 @@ void Axis::getImageShadow(const cv::Mat & src){
 			if(src.at<uchar>(j,i) == 0)
 				pixelValue++;
 		}
-		this->verShadow[i] = pixelValue;
+		//this->verShadow[i] = pixelValue;
+		this->verShadow.push_back(pixelValue);
 		pixelValue = 0;
 	}
 
