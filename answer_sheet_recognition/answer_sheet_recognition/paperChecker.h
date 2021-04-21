@@ -1,7 +1,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include <string>
-#define DEBUG 0
+#define DEBUG 1
 #define NUMS 20  // 一栏题目数量
 
 

@@ -22,3 +22,38 @@ void Axis::getShadowIndex(const std::vector<int> & shadowArray){
 	}
 
 }
+
+void Axis::getImageShadow(const cv::Mat & src){
+    if(src.empty()){
+		std::cout<<"src img is empty in getImageShadow()!"<<std::endl;	
+	}
+	// 对src进行二值化值统计
+	//horizontal 水平
+
+	
+	int pixelValue = 0;
+	for(int i = 0; i < src.rows; i++)   //有多少行
+	{
+		for(int j = 0; j < src.cols; j++)
+		{
+			if(src.at<uchar>(i,j) == 0)
+				pixelValue++;
+		}
+		this->horShadow[i] = pixelValue;
+		pixelValue = 0;
+	}
+
+	//vertical 垂直
+	//vector<int> vertical_out;
+	for(int i = 0; i < src.cols; i++)
+	{
+		for(int j = 0; j < src.rows; j ++)
+		{
+			if(src.at<uchar>(j,i) == 0)
+				pixelValue++;
+		}
+		this->verShadow[i] = pixelValue;
+		pixelValue = 0;
+	}
+
+}

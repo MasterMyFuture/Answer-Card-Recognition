@@ -1,4 +1,5 @@
 #include "paperChecker.h"
+#include "axis.h"
 #include <vector>
 #include <string>
 
@@ -114,19 +115,19 @@ void getYLocate(cv::Mat &edImage){
 	std::vector<int> vertical(edImage.cols);
 	getImageShadow(edImage,horizon, vertical);
 	
-	
-	std::vector<int> headIndex;
-	std::vector<int> endIndex;
+	Axis *xcoord = new Axis();
+
 	if(!vertical.empty()){
-		getShadowIndex(vertical, headIndex,endIndex);
+		//getShadowIndex(vertical, headIndex,endIndex);
+		xcoord->getShadowIndex(vertical);
 	}
 	cv::Mat locImage;
-	if(headIndex.empty()&&endIndex.empty()){
+	if(xcoord->headIndex.empty()&&xcoord->endIndex.empty()){
 		std::cout<<"locIndex is empty!"<<std::endl;
 
 	}else{
 		// 切割黑条
-		edImage(cv::Rect(headIndex.back(),0, endIndex.back()-headIndex.back(), edImage.rows-1) ).copyTo(locImage);
+		edImage(cv::Rect(xcoord->headIndex.back(),0, xcoord->endIndex.back()-xcoord->headIndex.back(), edImage.rows-1) ).copyTo(locImage);
 		if(DEBUG){
 			imshow("LocateImage", locImage);
 		}
@@ -138,24 +139,25 @@ void getYLocate(cv::Mat &edImage){
 	std::vector<int> locVertical(locImage.cols);
 	getImageShadow(locImage, locHorizon, locVertical);
 
-	std::vector<int> locUpIndex, locDownIndex;
+	Axis *ycoord = new Axis();
 	if (!locHorizon.empty())
 	{
-		getShadowIndex(locHorizon, locUpIndex, locDownIndex);
+		//getShadowIndex(locHorizon, locUpIndex, locDownIndex);
+		ycoord->getShadowIndex(locHorizon);
 	}
 	
 // #ifdef 0
-	if(locUpIndex.size() == locDownIndex.size())
+	if(ycoord->headIndex.size() == ycoord->endIndex.size())
 	{
 		cv::Mat tempq;
 		edImage.copyTo(tempq);
-		size_t lengthq = locUpIndex.size();
+		size_t lengthq = ycoord->headIndex.size();
 		for(int i = 0; i < lengthq ; i++)
 		{
-			cv::Point ppt1 = cv::Point(0,locUpIndex[i]);
-			cv::Point ppt2 = cv::Point(tempq.cols-1, locUpIndex[i]);
-			cv::Point ppt3 = cv::Point(0,locDownIndex[i]);
-			cv::Point ppt4 = cv::Point(tempq.cols-1, locDownIndex[i]);
+			cv::Point ppt1 = cv::Point(0,ycoord->headIndex[i]);
+			cv::Point ppt2 = cv::Point(tempq.cols-1, ycoord->headIndex[i]);
+			cv::Point ppt3 = cv::Point(0,ycoord->endIndex[i]);
+			cv::Point ppt4 = cv::Point(tempq.cols-1, ycoord->endIndex[i]);
 			line(tempq, ppt1, ppt2, cv::Scalar(100));
 			line(tempq, ppt3, ppt4, cv::Scalar(100));
 		}
@@ -167,7 +169,7 @@ void getYLocate(cv::Mat &edImage){
 		
 	}
 
-	getAnswerList(edImage, locUpIndex, locDownIndex);
+	getAnswerList(edImage, ycoord->headIndex, ycoord->endIndex);
 	
 }
 
@@ -175,23 +177,25 @@ void getAnswerList(cv::Mat &edImage, const std::vector<int> locUpIndex, const st
 
 	cv::Mat	answer = edImage(cv::Rect(0,locDownIndex[11], edImage.cols-1, locUpIndex[17]-locDownIndex[11]));
 
-
-	std::vector<int> ansHorizon(answer.rows);
-	std::vector<int> ansVertical(answer.cols);
-	getImageShadow(answer, ansHorizon, ansVertical);
-	std::vector<int> ansUpIndex, ansDownIndex;
-	getShadowIndex(ansVertical, ansUpIndex, ansDownIndex);
+	Axis *anscoord = new Axis();
+	anscoord->getImageShadow(answer);
+	//std::vector<int> ansUpIndex, ansDownIndex;
+	//getShadowIndex(ansVertical, ansUpIndex, ansDownIndex);
+	
+	anscoord->getShadowIndex(anscoord->verShadow);
 	if(DEBUG){
 		imshow("answer", answer);
 	}
-	static std::vector<std::string> answerList(NUMS);
+	std::vector<std::string> answerList(NUMS);
+	Axis *sincoord;
 	for(int i = 0; i < NUMS; i ++)
 	{
-		cv::Mat tempAns = answer(cv::Rect(ansUpIndex[i], 0, ansDownIndex[i] - ansUpIndex[i] , answer.rows));
+		cv::Mat tempAns = answer(cv::Rect(anscoord->headIndex[i], 0, anscoord->endIndex[i] - anscoord->headIndex[i] , answer.rows));
+		sincoord = new Axis();
 		std::vector<int> tmpHorizon(tempAns.rows);
 		std::vector<int> tmpVertical(tempAns.cols);
-		getImageShadow(tempAns,tmpHorizon, tmpVertical);
-		findAnswer(tmpHorizon, locUpIndex, locDownIndex, answerList[i]);
+		getImageShadow(tempAns,sincoord->horShadow, sincoord->verShadow);
+		findAnswer(tmpHorizon, sincoord->horShadow, sincoord->verShadow, answerList[i]);
 		std::cout << i+1 << " : "<< answerList[i] << std::endl;
 	}
 }
