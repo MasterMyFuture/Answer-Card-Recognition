@@ -3,6 +3,7 @@
 //作者： liangzelang（liangzelang@gmail.com）
 //时间： 2017/05/18
 //版本： 0.01
+//版本: 0.02
 
 #include <opencv2/opencv.hpp>
 #include <iostream>
@@ -18,6 +19,9 @@ using namespace cv;
 //vector<string> Answer(NUMS);
 //int ptflag=0;
 int threshold_value = 100;
+int ptflag=0;
+vector<Point2f> srcpt(4);
+vector<Point2f> dstpt(4);
 Mat pic;
 Mat perImage;
 Mat pdstImage;
@@ -47,7 +51,7 @@ int main()
 		
 
 	}else{
-
+		//如果没有透视变换的图片，需要手动选择透视变换的锚点
 		pic = imread("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/2.jpg",1);
 		namedWindow("input",WINDOW_NORMAL);
 		if(!pic.empty()){
@@ -88,9 +92,6 @@ void on_Change(int,void *)
 
 static void on_Mouse( int event, int x, int y, int flags, void* )
 {	
-	int ptflag=0;
-	vector<Point2f> srcpt(4);
-	vector<Point2f> dstpt(4);
 	if( x < 0 || x >= pic.cols || y < 0 || y >= pic.rows )
 	{
 		cout << "Mouse is out \n" << endl;
@@ -111,6 +112,7 @@ static void on_Mouse( int event, int x, int y, int flags, void* )
 			{
 				ptflag = 0;
 				cout << "Work has done\n" << endl;
+				// 从左上角逆时针
 				dstpt[0] = Point2f(0,0);
 				dstpt[1] = Point2f(0,640);
 				dstpt[2] = Point2f(480,640);

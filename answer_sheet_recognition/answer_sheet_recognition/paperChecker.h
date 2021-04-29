@@ -3,7 +3,7 @@
 #include <string>
 #include "axis.h"
 
-#define DEBUG 1
+#define DEBUG 0
 #define NUMS 20  // 一栏题目数量
 
 

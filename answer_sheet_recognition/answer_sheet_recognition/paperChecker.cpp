@@ -132,22 +132,6 @@ void getAnswerList(cv::Mat &edImage, Axis *ycoord){
 
 
 
-
-
-
-
-/**
- * 1. 为什么要locUp和locDown两个向量？
- * 		因为loc表示右边条纹
- * 2. 为什么它可以区分右边的条纹和答案？
- * 
- * 3. 它是如何判断ABCD？
- * 		求出填涂答案的上边界m和下边界n，求出水平中位线
- * 		用中位线和右边条纹的上下boder比
- * 
- * 4. 为什么要求mid？
- * 		求填涂答案的水平中位线
-*/
 void findAnswer(const std::vector<int> & input, Axis *y, std::string & ans)
 {
 	size_t length = input.size();
