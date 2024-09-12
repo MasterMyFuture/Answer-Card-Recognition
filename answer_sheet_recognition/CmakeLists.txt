@@ -1,0 +1,14 @@
+# CMakeList.txt: cmake-cv 的 CMake 项目，在此处包括源代码并定义
+# 项目特定的逻辑。
+#
+cmake_minimum_required (VERSION 3.8)
+set(CMAKE_CXX_STANDARD 14)
+set(PROJECT_NAME "answer_check")
+project(${PROJECT_NAME})
+
+
+
+
+
+# Add OpenCV headers location to your include paths
+add_subdirectory ("answer_sheet_recognition")

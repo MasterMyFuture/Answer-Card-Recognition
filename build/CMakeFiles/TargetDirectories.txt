@@ -1,0 +1,3 @@
+D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/build/CMakeFiles/ALL_BUILD.dir
+D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/build/CMakeFiles/ZERO_CHECK.dir
+D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/build/answer_sheet_recognition/CMakeFiles/answer_check.dir

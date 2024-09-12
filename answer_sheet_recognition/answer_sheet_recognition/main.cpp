@@ -1,291 +1,80 @@
-//¹¦ÄÜ£º Í¸ÊÓ±ä»»Íê³ÉÍ¼Ïñ»û±ä½ÃÕı
-//È±µã£º ÓÉÓÚ´ğÌâ¿¨ĞÎ×´ÎÊÌâ£¬ÎŞ·¨Íê³É½Çµã×Ô¶¯Ñ¡È¡£¬¹Ê²ÉÓÃÊó±êÈË¹¤Ñ¡Ôñ
-//×÷Õß£º liangzelang£¨liangzelang@gmail.com£©
-//Ê±¼ä£º 2017/05/18
-//°æ±¾£º 0.01
+//åŠŸèƒ½ï¼š é€è§†å˜æ¢å®Œæˆå›¾åƒç•¸å˜çŸ«æ­£
+//ç¼ºç‚¹ï¼š ç”±äºç­”é¢˜å¡å½¢çŠ¶é—®é¢˜ï¼Œæ— æ³•å®Œæˆè§’ç‚¹è‡ªåŠ¨é€‰å–ï¼Œæ•…é‡‡ç”¨é¼ æ ‡äººå·¥é€‰æ‹©
+//ä½œè€…ï¼š liangzelangï¼ˆliangzelang@gmail.comï¼‰
+//æ—¶é—´ï¼š 2017/05/18
+//ç‰ˆæœ¬ï¼š 0.01
+//ç‰ˆæœ¬: 0.02
 
-#include <opencv2\opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include <iostream>
 #include <sstream>
-#include <string>
-#include <vector>
 #include <algorithm>
+#include "paperChecker.h"
+
 using namespace std;
 using namespace cv;
-const int NUMS = 20;
+//const int NUMS = 20;
+// vector<Point2f> srcpt(4);
+// vector<Point2f> dstpt(4);
+//vector<string> Answer(NUMS);
+//int ptflag=0;
+int threshold_value = 100;
+int ptflag=0;
 vector<Point2f> srcpt(4);
 vector<Point2f> dstpt(4);
-vector<string> Answer(NUMS);
-int ptflag=0;
 Mat pic;
 Mat perImage;
 Mat pdstImage;
 Mat pmidImage;
 Mat psrcImage;
 
-int threshold_value = 100;
+
+
+
 static void on_Mouse(int event, int x, int y, int flags, void *);
 void on_Change(int, void*);
-void process_Pic1();
-void project_Pic(const Mat & src, vector<int> & horizon_out, vector<int> & vertical_out);
-void findMax(const vector<int> & inputArray, vector<int> & maxIndex);
-int findVerMax(const vector<int> & inputArray, vector<int> & upIndex, vector<int> & downIndex);
-void findVerticalMax(const vector<int> & inputArray, vector<int> & maxIndex);
-void findLocHorizon(const vector<int> & inputArray, vector<int> & locUp, vector<int> & locDown);
-void picCut(const Mat & inputArray, Mat & outputArray, const Rect & rectRoi);
-void findAnswer(const vector<int> & input, const vector<int> locUp, const vector<int> locDown, string & ans);
+
 int main()
 {
 	Mat dstImage;
 	Mat midImage;
-	process_Pic1();
+	bool isPers = true;
+	//
+	Mat srcImage = imread("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/Perspectived.jpg",1);
+
+	if(!srcImage.empty()){
+		
+		std::vector<int> horizon(srcImage.rows);
+		std::vector<int> vertical(srcImage.cols);
+		preprocess(srcImage,dstImage);
+		getYLocate(dstImage);
+		
+
+	}else{
+		//å¦‚æœæ²¡æœ‰é€è§†å˜æ¢çš„å›¾ç‰‡ï¼Œéœ€è¦æ‰‹åŠ¨é€‰æ‹©é€è§†å˜æ¢çš„é”šç‚¹
+		pic = imread("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/2.jpg",1);
+		namedWindow("input",WINDOW_NORMAL);
+		if(!pic.empty()){
+			imshow("input",pic);
+		}
+		setMouseCallback("input",on_Mouse,0);
+	
+	//
+
+	}
+
+	//process_Pic1(srcImage);
 	waitKey(0);
 	return 0;
 
 }
 
-int findVerMax(const vector<int> & inputArray, vector<int> & upIndex, vector<int> & downIndex)
-{
-	int length = inputArray.size();  //0 ºÚÉ«  255°×É«
-	int maxValue = inputArray[0];
-	int m = 0,n= 0;
-	int maxIndex = 0;
-	for(int i = 1; i < length-1; i++)
-	{
-		if(inputArray[i-1] ==0 && inputArray[i] > 0)
-		{
-			upIndex[m] = i; 
-			m++;
-		}
-		else if(inputArray[i-1] > 0 && inputArray[i] == 0)
-		{
-			downIndex[n] = i;
-			n++;
-		}
-		if(maxValue < inputArray[i])
-		{
-			maxValue = inputArray[i];
-			maxIndex = i;
-		}
-	}
-	return maxIndex;
-}
-
-void findVerticalMax(const vector<int> & inputArray, vector<int> & maxIndex)
-{
-	int length = inputArray.size();
-	int maxVal = 0;
-	int maxInd = 0;
-	//ÕÒµ½×î´óµÄindex
-	for(int i = 0; i < length; i++)
-	{
-		if(maxVal < inputArray[i])
-		{
-			maxVal = inputArray[i];
-			maxInd = i;
-		}
-	}
-	//Ñ°ÕÒ¶¨Î»±ê×ó±ß½ç
-	for(int i = maxInd; i > 0; i--)
-	{
-		if(inputArray[i] == 0 && inputArray[i+1] > 0)
-		{
-			maxIndex.push_back(i);
-			break;
-		}
-			
-	}
-	//Ñ°ÕÒ¶¨Î»±êÓÒ±ß½ç
-	for(int i = maxInd; i < length; i++)
-	{
-		if(inputArray[i] == 0 && inputArray[i-1] > 0)
-		{
-			maxIndex.push_back(i);
-			break;
-		}
-	}
-}
-
-void findMax(const vector<int> & inputArray, vector<int> & maxIndex)
-{
-	//vector<int> maxIndex(2);
-	int length = inputArray.size();
-	int maxValue1 = inputArray[0];
-	maxIndex[0] = 0;
-	for(int i = 1; i < length/2; i++)
-	{
-		if(maxValue1 < inputArray[i])
-		{
-			maxValue1 = inputArray[i];
-			maxIndex[0] = i;
-		}
-	}
-	int m = maxIndex[0];
-	while(inputArray[m]>3)
-		m++;
-	maxIndex[2] = m;
-	int maxValue2 = inputArray[length/2];
-	maxIndex[1] = length/2;
-	for(int i = length/2; i < length; i++)
-	{
-		if(maxValue2 < inputArray[i])
-		{
-			maxValue2 = inputArray[i];
-			maxIndex[1] = i;
-		}
-	}
-	int n = maxIndex[1];
-	while(inputArray[n]>3)
-		n--;
-	maxIndex[3] = n;
-}
-
-//µÚÒ»ÖÖ·½·¨£¬Ê¹ÓÃĞÎÌ¬Ñ§ÂË²¨µÄ·½Ê½¶ÔÍ¼ÏñÔ¤´¦Àí
-void process_Pic1()
-{
-
-// Í¼ÏñÔ¤´¦Àí
-// µÃµ½¶şÖµ»¯Í¼Ïñ£¬»ù±¾ÄÜ¹»·ÖÀë³öÍ¿¿¨Î»ÖÃ£¬ÎªºóÃæ´¦ÀíÌá¹©Ô´
-// Õâ¸ö½×¶ÎÖØÄÑµã£º 1¡¢Í¸ÊÓ±ä»»µÄ×¼È·ĞÔ   2¡¢¶şÖµ»¯ãĞÖµµÄÑ¡È¡ºÏÀíĞÔ 3¡¢ĞÎÌ¬Ñ§ÂË²¨
-	Mat rsrcImage = imread("D:\\C++³ÌĞòÁªÏµÎÄ¼ş¼Ğ£¨¿ÉÑ¡ÔñĞÔÉ¾³ı£©\\Answer-Card-Recognition\\pic\\result1.jpg",1);
-	Mat rGrayImage;
-	Mat rBinImage;
-	cvtColor(rsrcImage,rGrayImage, CV_BGR2GRAY);  //»Ò¶È»¯
-	//CV_THRESH_OTSU²ÎÊı×Ô¶¯Éú³ÉãĞÖµ£¬¸úµÚÈı¸ö²ÎÊıÒ²¾ÍÃ»ÓĞ¹ØÏµÁË¡£ 
-    threshold(rGrayImage, rBinImage, 0, 255,  CV_THRESH_BINARY | CV_THRESH_OTSU); //¶şÖµ»¯
-	///imshow("binary image", rBinImage);
-	Mat erodeImage, dilateImage, edImage;
-	//¶¨ÒåºË  
-	Mat element = getStructuringElement(MORPH_RECT, Size(3, 3));   
-	//½øĞĞĞÎÌ¬Ñ§²Ù×÷ 	
-	morphologyEx(rBinImage, edImage, MORPH_CLOSE, element,Point(-1,-1),1);
-	imshow("ÏÈÅòÕÍºó¸¯Ê´--±ÕÔËËã", edImage);
-
-	
-// Í¼Ïñ´¹Ö±Í¶Ó° µÃµ½¶¨Î»±êÎ»ÖÃ£¬²¢ÇĞ¸î
-// Í¼ÏñË®Æ½Í¶Ó°  µÃµ½´ğÌâ¿¨ÇøÓòÎ»ÖÃ£¬²¢ÇĞ¸î
-// ´Ë¶Î´¦ÀíµÄÍ¼ÏñÔ´£º edImage
-	Mat psrcImage(edImage);  //´¦ÀíÔ´Í¼Ïñ
-	vector<int> horizon(psrcImage.rows);
-	vector<int> vertical(psrcImage.cols);
-	project_Pic(psrcImage,horizon, vertical);
-	
-	//²éÕÒ¶¨Î»±ê
-	vector<int> locIndex;
-	findVerticalMax(vertical, locIndex);
-	Mat locImage;
-	psrcImage(Rect(locIndex[0],0, locIndex[1] - locIndex[0] + 1, psrcImage.rows-1) ).copyTo(locImage);
-	imshow("LocateImage", locImage);
-	//Èç¹û²»ÒªÇóÂ³°ôĞÔ£¬¾ÍÖ±½ÓË®Æ½Í¶Ó°¶¨Î»±ê¾ÍOK
-	vector<int> locHorizon(locImage.rows);
-	vector<int> locVertical(locImage.cols);
-	project_Pic(locImage, locHorizon, locVertical);
-
-	vector<int> locUpIndex, locDownIndex;
-	findLocHorizon(locHorizon, locUpIndex, locDownIndex);
-// #ifdef 0
-	if(locUpIndex.size() == locDownIndex.size())
-	{
-		Mat tempq;
-		psrcImage.copyTo(tempq);
-		int lengthq = locUpIndex.size();
-		for(int i = 0; i < lengthq ; i++)
-		{
-			Point ppt1 = Point(0,locUpIndex[i]);
-			Point ppt2 = Point(tempq.cols-1, locUpIndex[i]);
-			Point ppt3 = Point(0,locDownIndex[i]);
-			Point ppt4 = Point(tempq.cols-1, locDownIndex[i]);
-			line(tempq, ppt1, ppt2, Scalar(0, 0, 100));
-			line(tempq, ppt3, ppt4, Scalar(0, 0, 100));
-		}
-		imshow("srljsf", tempq);
-	}
-// #endif
-	
-	Mat answer;
-	picCut(psrcImage,answer, Rect(0,locDownIndex[11], psrcImage.cols-1, locUpIndex[17]-locDownIndex[11]));
-
-	vector<int> ansHorizon(answer.rows);
-	vector<int> ansVertical(answer.cols);
-	project_Pic(answer, ansHorizon, ansVertical);
-	vector<int> ansUpIndex, ansDownIndex;
-	findLocHorizon(ansVertical, ansUpIndex, ansDownIndex);
-	//imshow("answer", answer);
 
 
-	for(int i = 0; i < NUMS; i ++)
-	{
-		Mat tempAns = answer(Rect(ansUpIndex[i], 0, ansDownIndex[i] - ansUpIndex[i] , answer.rows));
-		vector<int> tmpHorizon(tempAns.rows);
-		vector<int> tmpVertical(tempAns.cols);
-		project_Pic(tempAns,tmpHorizon, tmpVertical);
-		findAnswer(tmpHorizon, locUpIndex, locDownIndex, Answer[i]);
-		cout << i+1 << " : "<< Answer[i] << endl;
-	}
 
-}
 
-void findAnswer(const vector<int> & input, const vector<int> locUp, const vector<int> locDown, string & ans)
-{
-	int length = input.size();
-	int m, n;
-	for(int i = 1; i < length; i++)
-	{
-		if(input[i-1] == 0 && input[i] >0)
-		{
-			m = i;	
-		}
-		else if(input[i-1] > 0 && input[i] == 0 )
-		{
-			n = i;
-		}
-	}
-	int mid = (int)(m+n)/2 + locDown[11];
-	if(mid >= locUp[13] && mid <= locDown[13])  //A
-	{
-		ans = 'A';
-	}
-	else if(mid >= locUp[14] && mid <= locDown[14])
-	{
-		ans = 'B';
-	}
-	else if(mid >= locUp[15] && mid <= locDown[15])
-	{
-		ans = 'C';
-	}
-	else if(mid >= locUp[16] && mid <= locDown[16]) //D
-	{
-		ans = 'D';
-	}
-	else
-	{
-		ans = "None";
-	}
-}
 
-void picCut(const Mat & inputArray, Mat & outputArray, const Rect & rectRoi)
-{
-	outputArray = inputArray(rectRoi);
-}
 
-void findLocHorizon(const vector<int> & inputArray, vector<int> & locUp, vector<int> & locDown)
-{
-	int length = inputArray.size();  //
-	int upNums = 0, downNums = 0;
-	for(int i = 1; i < length; i++)
-	{
-		if(inputArray[i-1] == 0 && inputArray[i] > 0)
-		{
-			locUp.push_back(i);
-			upNums ++;
-		}
-		else if(inputArray[i-1] > 0 && inputArray[i] == 0)
-		{
-			locDown.push_back(i);
-			downNums ++;
-		}
-	}
-}
 
 void on_Change(int,void *)
 {	
@@ -294,62 +83,13 @@ void on_Change(int,void *)
 }
 
 
-//º¯Êı×÷ÓÃ£º ½«Í¼ÏñË®Æ½ºÍ´¹Ö±Í¶Ó°£¬µÃµ½ Ë®Æ½ºÍ´¹Ö±Í¶Ó°µÄÍ¼
-//·µ»Ø£º horizon_out Ë®Æ½Í¶Ó°µÄÍ¼
-//		 vertical_out ´¹Ö±Í¶Ó°µÄÍ¼
-void project_Pic(const Mat & src, vector<int> & horizon_out, vector<int> & vertical_out)
-{
-	// ¶Ôsrc½øĞĞ¶şÖµ»¯ÖµÍ³¼Æ
-	//horizontal Ë®Æ½
-	
-	int pixelValue = 0;
-	for(int i = 0; i < src.rows; i++)   //ÓĞ¶àÉÙĞĞ
-	{
-		for(int j = 0; j < src.cols; j++)
-		{
-			if(src.at<uchar>(i,j) == 0)
-				pixelValue++;
-		}
-		horizon_out[i] = pixelValue;
-		pixelValue = 0;
-	}
-
-	//vertical ´¹Ö±
-	//vector<int> vertical_out;
-	for(int i = 0; i < src.cols; i++)
-	{
-		for(int j = 0; j < src.rows; j ++)
-		{
-			if(src.at<uchar>(j,i) == 0)
-				pixelValue++;
-		}
-		vertical_out[i] = pixelValue;
-		pixelValue = 0;
-	}
-	// show it
-	Mat horImage(src.rows, src.cols, CV_8UC1);
-	Mat verImage(src.rows, src.cols, CV_8UC1);
-	// horizon
-	for(int i = 0; i < horImage.rows; i++)
-	{
-		for(int j = 0; j < horizon_out[i]; j++)
-			horImage.at<uchar>(i,j) = 0;  //¼ÙÉè³õÊ¼»¯Îª0£»
-	}
-	for(int i = 0; i < verImage.cols; i ++)
-	{
-		for(int j = 0; j < vertical_out[i]; j++)
-			verImage.at<uchar>(j,i) = 0;
-	}
-	imshow("hor",horImage);
-	imshow("ver",verImage);
-	imwrite("3.jpg",horImage);
-	imwrite("4.jpg",verImage);
-}
 
 
-//-----------------------------------¡¾onMouse( )º¯Êı¡¿---------------------------------------
-//		ÃèÊö£ºÊó±êÏûÏ¢»Øµ÷º¯Êı
+//-----------------------------------ã€onMouse( )å‡½æ•°ã€‘---------------------------------------
+//		æè¿°ï¼šé¼ æ ‡æ¶ˆæ¯å›è°ƒå‡½æ•°
 //-----------------------------------------------------------------------------------------------
+
+
 static void on_Mouse( int event, int x, int y, int flags, void* )
 {	
 	if( x < 0 || x >= pic.cols || y < 0 || y >= pic.rows )
@@ -359,33 +99,40 @@ static void on_Mouse( int event, int x, int y, int flags, void* )
 	}		
 	switch(event)
 	{
-		case CV_EVENT_LBUTTONUP :
+		case EVENT_LBUTTONUP:
 			srcpt[ptflag] = Point(x,y);
-			//srcpt.push_back(Point(x,y));  //±£´æÑ¡È¡µÄµã
+			//srcpt.push_back(Point(x,y));  //ä¿å­˜é€‰å–çš„ç‚¹
 			cout << "The chosen point is : " << srcpt[ptflag].x << " , " << srcpt[ptflag].y << endl;
 			ptflag++;
+			
+			
+			  		
+			
 			if(ptflag == 4)
 			{
 				ptflag = 0;
 				cout << "Work has done\n" << endl;
+				// ä»å·¦ä¸Šè§’é€†æ—¶é’ˆ
 				dstpt[0] = Point2f(0,0);
-				dstpt[3] = Point2f(0,640);
+				dstpt[1] = Point2f(0,640);
 				dstpt[2] = Point2f(480,640);
-				dstpt[1] = Point2f(480,0);
+				dstpt[3] = Point2f(480,0);
+				
+				
 			
-				//ÇóÈ¡Ó³Éä¾ØÕó
-				perImage = Mat::zeros(640,480, CV_8UC3);   //ÕâÀïµÄzeros µÚÒ»¸ö²ÎÊıÊÇrows ĞĞ  µÚ¶şÊÇcols ÁĞ  ºÍwidth£¨£©º¯Êı¶¨ÒåÕıºÃÏà·´
+				//æ±‚å–æ˜ å°„çŸ©é˜µ
+				perImage = Mat::zeros(640,480, CV_8UC3);   //è¿™é‡Œçš„zeros ç¬¬ä¸€ä¸ªå‚æ•°æ˜¯rows è¡Œ  ç¬¬äºŒæ˜¯cols åˆ—  å’Œwidthï¼ˆï¼‰å‡½æ•°å®šä¹‰æ­£å¥½ç›¸å
 				Mat transMat = getPerspectiveTransform(srcpt, dstpt);
 				warpPerspective(pic, perImage, transMat, perImage.size());	
-				imshow("fuck", perImage);
+				imshow("perspectived", perImage);
 
-				imwrite("D:\\C++³ÌĞòÁªÏµÎÄ¼ş¼Ğ£¨¿ÉÑ¡ÔñĞÔÉ¾³ı£©\\Answer-Card-Recognition\\pic\\result.jpg",perImage);	
+				imwrite("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/Perspectived.jpg",perImage);	
 
-				if(ptflag == 0)
+				if(ptflag == 0&& DEBUG)// å¦‚æœç‚¹å‡»æ¬¡æ•°ä¸º0ï¼Œæå–å›¾ç‰‡
 				{
-					psrcImage = imread("D:\\C++³ÌĞòÁªÏµÎÄ¼ş¼Ğ£¨¿ÉÑ¡ÔñĞÔÉ¾³ı£©\\Answer-Card-Recognition\\pic\\result1.jpg",1);
-					cvtColor(psrcImage, pmidImage, CV_RGB2GRAY);
-					namedWindow("process", 1);
+					psrcImage = imread("D:/Users/Dell/Documents/GitHub/Answer-Card-Recognition/pic/Perspectived.jpg",1);
+					cvtColor(psrcImage, pmidImage, COLOR_RGB2GRAY);
+					namedWindow("process", WINDOW_NORMAL);
 					createTrackbar("value", "process", &threshold_value, 255, on_Change);
 				}
 			}
@@ -395,4 +142,9 @@ static void on_Mouse( int event, int x, int y, int flags, void* )
 			break;
 	}
 }
+
+
+
+
+
 
